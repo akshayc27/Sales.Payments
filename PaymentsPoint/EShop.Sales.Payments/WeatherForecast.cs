@@ -1,4 +1,4 @@
-namespace Persistent.System
+namespace Sales.Payments
 {
     public class WeatherForecast
     {

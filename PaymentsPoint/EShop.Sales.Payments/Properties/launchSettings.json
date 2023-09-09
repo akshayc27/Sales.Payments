@@ -1,6 +1,6 @@
 {
   "profiles": {
-    "Persistent.System": {
+    "Sales.Payments": {
       "commandName": "Project",
       "launchBrowser": true,
       "launchUrl": "swagger",
