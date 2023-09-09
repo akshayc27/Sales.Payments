@@ -91,14 +91,14 @@ namespace Sales.Payments
                 writeTo => writeTo.Console(
                     restrictedToMinimumLevel: LogEventLevel.Information,
                     outputTemplate:
-                    "[{Timestamp : HH:MM:ss} {Level:u3}] {RequestId} {Message:lj}{NewLine}{Exception}"
+                    "[{Timestamp:HH:mm:ss} {Level:u3}] {RequestId} {Message:lj}{NewLine}{Exception}"
                 )
                 )
                 .WriteTo.Conditional(LogAllExceptEfCommands,
                 writeTo => writeTo.File(
                     Path.Combine(logDirectory,"log.txt"),
                     outputTemplate:
-                    "[{Timestamp : HH:MM:ss.fff} | {Level:u3}] | {RequestMethod} {RequestPath} | {RequestId} | {SourceContext} | {Message:lj}{NewLine}{Exception}",
+                    "{Timestamp:HH:mm:ss.fff} | {Level:u3} | {RequestMethod} {RequestPath} | {RequestId} | {SourceContext} | {Message:lj}{NewLine}{Exception}",
                     rollingInterval: RollingInterval.Day
                 )
                 )
@@ -106,7 +106,7 @@ namespace Sales.Payments
                 writeTo => writeTo.File(
                     Path.Combine(logDirectory, "database.txt"),
                     outputTemplate:
-                    "[{Timestamp : HH:MM:ss.fff} | {Level :u3}] | {RequestMethod} {RequestPath} | {RequestId} | {SourceContext} | {Message:lj}{NewLine}{Exception}",
+                    "{Timestamp:HH:mm:ss.fff} | {Level :u3} | {RequestMethod} {RequestPath} | {RequestId} | {SourceContext} | {Message:lj}{NewLine}{Exception}",
                     rollingInterval: RollingInterval.Day
                 )
                 )
