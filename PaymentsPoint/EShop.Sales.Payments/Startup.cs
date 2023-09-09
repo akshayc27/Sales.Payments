@@ -52,6 +52,5 @@ namespace Sales.Payments
                 });
             }
         }
-    
 
 }

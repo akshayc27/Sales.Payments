@@ -12,7 +12,7 @@ namespace Sales.Payments
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static int Main(string[] args)
         {
             var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ??
                 throw new InvalidOperationException("Missing required envirement variable ASPNETCORE_ENVIRONMENT.");
@@ -22,18 +22,56 @@ namespace Sales.Payments
 
             Log.Logger = ConfigureSerilog(new LoggerConfiguration(), environment).CreateLogger();
 
-            Log.Information("Logging Configured");
+            Log.Information("Logging configured");
 
-            CreateHostBuilder(args).Build().Run();
+            var host = CreateHostBuilder(args).Build(); //.Run();
+
+            try
+            {
+                Log.Information("Web host Configured");
+
+                using (var scope = host.Services.CreateScope())
+                {
+                    var provider = scope.ServiceProvider;
+
+                    Log.Information("Validating Application settings");
+
+                    if(environment == Environments.Development)
+                    {
+                        Log.Information("Applying migrations");
+                        //host.MigrateDbContext<PaymentsDbContext>((_, __) => { });
+                    }
+                }
+
+                Log.Information("Starting Web Host");
+                host.Run();
+                return 0;
+            }
+            catch (Exception ex)
+            {
+                Log.Fatal(ex, "Unhandled Exception in application");
+                return 1;
+            }
+            finally
+            {
+                Log.CloseAndFlush();
+            }
+
         }
 
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
+        public static IHostBuilder CreateHostBuilder(string[] args)
+        {
+            return Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.UseStartup<Startup>();
+                    webBuilder.UseStartup<Startup>()
+                    .UseSerilog(
+                        (context, loggerConfiguration) =>
+                              ConfigureSerilog(loggerConfiguration,context.HostingEnvironment.EnvironmentName)
+                              .ReadFrom.Configuration(context.Configuration)
+                        );
                 });
-
+        }
 
         private static LoggerConfiguration ConfigureSerilog(LoggerConfiguration config, string environment)
         {
