@@ -20,14 +20,25 @@ namespace Sales.Payments
             //Here We would need logger to record any startup errors.
             //We will overrite it when we configure final web host.
 
-            Log.Logger = ConfigureSerilog(new LoggerConfiguration(), environment).CreateLogger();
+            var logger = ConfigureSerilog(new LoggerConfiguration(), environment).CreateLogger();
+
+            Log.Logger = logger; //ConfigureSerilog(new LoggerConfiguration(), environment).CreateLogger();
 
             Log.Information("Logging configured");
 
-            var host = CreateHostBuilder(args).Build(); //.Run();
-
             try
             {
+                var builder = CreateHostBuilder(args); //.Run();
+
+                builder.ConfigureLogging(logging =>
+                {
+                    logging.ClearProviders();
+                    logging.AddSerilog(logger);
+
+                });
+
+                var host = builder.Build();
+
                 Log.Information("Web host Configured");
 
                 using (var scope = host.Services.CreateScope())
@@ -36,7 +47,7 @@ namespace Sales.Payments
 
                     Log.Information("Validating Application settings");
 
-                    if(environment == Environments.Development)
+                    if (environment == Environments.Development)
                     {
                         Log.Information("Applying migrations");
                         //host.MigrateDbContext<PaymentsDbContext>((_, __) => { });
@@ -64,12 +75,12 @@ namespace Sales.Payments
             return Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.UseStartup<Startup>()
-                    .UseSerilog(
-                        (context, loggerConfiguration) =>
-                              ConfigureSerilog(loggerConfiguration,context.HostingEnvironment.EnvironmentName)
-                              .ReadFrom.Configuration(context.Configuration)
-                        );
+                    webBuilder.UseStartup<Startup>();
+                    //.UseSerilog(
+                    //    (context, loggerConfiguration) =>
+                    //          ConfigureSerilog(loggerConfiguration,context.HostingEnvironment.EnvironmentName)
+                    //          .ReadFrom.Configuration(context.Configuration)
+                    //    );
                 });
         }
 
@@ -134,7 +145,7 @@ namespace Sales.Payments
                 )
                 .WriteTo.Conditional(LogAllExceptEfCommands,
                 writeTo => writeTo.File(
-                    Path.Combine(logDirectory,"log.txt"),
+                    Path.Combine(logDirectory, "log.txt"),
                     outputTemplate:
                     "{Timestamp:HH:mm:ss.fff} | {Level:u3} | {RequestMethod} {RequestPath} | {RequestId} | {SourceContext} | {Message:lj}{NewLine}{Exception}",
                     rollingInterval: RollingInterval.Day
