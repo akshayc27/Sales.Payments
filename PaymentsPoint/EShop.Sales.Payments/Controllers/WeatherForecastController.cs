@@ -1,9 +1,14 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Sales.Payments.WebApi.Infrastructure;
 
 namespace Sales.Payments.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [ApiExplorerSettings(GroupName ="v1")]
+    [ApiVersion("1.0")]
+    [Authorize(Policy = Policies.AdminOrCustomerAccess)]
+    [Route("api/v{version:apiVersion}")]
     public class WeatherForecastController : ControllerBase
     {
         private static readonly string[] Summaries = new[]
@@ -17,8 +22,8 @@ namespace Sales.Payments.Controllers
         {
             _logger = logger;
         }
-
-        [HttpGet(Name = "GetWeatherForecast")]
+        
+        [HttpGet("all",Name = "GetWeatherForecast")]
         public IEnumerable<WeatherForecast> Get()
         {
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast
