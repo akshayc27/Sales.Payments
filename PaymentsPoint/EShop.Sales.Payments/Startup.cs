@@ -132,7 +132,7 @@ namespace Sales.Payments
                     "All api keys must have at least one key registered."
                     );
             var registeredApiKeys = authSettings.ApiKeys.ToDictionary(
-                k => $"{nameof(Policies.ApiKey)} - {k.Name}",
+                k => $"{nameof(Policies.ApiKey)}-{k.Name}",
                 k => k.Keys
                 );
 

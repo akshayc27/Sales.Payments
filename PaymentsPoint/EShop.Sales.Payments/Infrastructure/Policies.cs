@@ -9,7 +9,7 @@
 
         public static class ApiKey
         {
-            public const string AdminKey = nameof(AdminKey) + "-" + nameof(AdminAccess);
+            public const string AdminKey = nameof(ApiKey) + "-" + nameof(AdminAccess);
         }
 
     }
