@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json.Converters;
 using Sales.Payments.WebApi.Infrastructure;
+using Sales.Payments.WebApi.Middleware;
 using System.IdentityModel.Tokens.Jwt;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
@@ -55,6 +56,8 @@ namespace Sales.Payments
             app.UseHttpsRedirection();
 
             app.UseSwaggerMiddleware();
+
+            app.UseMiddleware<RequestResponseLogging>();
 
             app.UseRouting();
             app.UseCors();
