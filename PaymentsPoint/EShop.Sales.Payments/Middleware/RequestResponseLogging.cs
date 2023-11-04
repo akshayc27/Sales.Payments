@@ -1,6 +1,5 @@
-﻿using Microsoft.Extensions.Caching.Memory;
+﻿using JetBrains.Annotations;
 using Sales.Payments.WebApi.Infrastructure;
-using System.Diagnostics.CodeAnalysis;
 using System.Text;
 
 namespace Sales.Payments.WebApi.Middleware
@@ -18,7 +17,8 @@ namespace Sales.Payments.WebApi.Middleware
             _logger = logger;
         }
 
-        public async void InvokeAsync([NotNull] HttpContext context)
+        [UsedImplicitly]
+        public async Task InvokeAsync([NotNull] HttpContext context)
         {
             if (context is null)
             {
@@ -85,8 +85,6 @@ namespace Sales.Payments.WebApi.Middleware
             }
                 
         }
-
-
 
     }
 }

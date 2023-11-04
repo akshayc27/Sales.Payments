@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using Newtonsoft.Json.Converters;
 using Sales.Payments.WebApi.Infrastructure;
 using Sales.Payments.WebApi.Middleware;
@@ -29,7 +30,7 @@ namespace Sales.Payments
             services.RegisterAuthetication(_configuration);
             //services.AddControllers();
             services.AddApiVersioning();
-            //services.AddEndpointsApiExplorer();
+            services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();
         }
 
@@ -112,7 +113,7 @@ namespace Sales.Payments
                     {
                         OnAuthenticationFailed = context =>
                         {
-                            if(context.Exception is SecurityTokenExpiredException)
+                            if (context.Exception is SecurityTokenExpiredException)
                             {
                                 context.Response.Headers.Add(ExpiredTokenHeader, "true");
                             }
@@ -146,13 +147,13 @@ namespace Sales.Payments
 
             foreach (var name in apiKeyPolicies)
             {
-                if (!registeredApiKeys.TryGetValue(name,out var keys))
+                if (!registeredApiKeys.TryGetValue(name, out var keys))
                 {
                     throw new InvalidOperationException($"Authentication Policy {name} does not have any api keys registered");
 
                 }
 
-                authBuilder.AddScheme<ApiKeyAuthenticationSchemeOptions,ApiKeyAuthenticationHandler>(
+                authBuilder.AddScheme<ApiKeyAuthenticationSchemeOptions, ApiKeyAuthenticationHandler>(
                     name,
                     options => { options.ApiKeys = keys; }
                     );

@@ -19,6 +19,10 @@ namespace Sales.Payments.WebApi.Infrastructure
                     setup.DocumentTitle = "Payments Point API";
                     setup.EnableDeepLinking();
                     setup.DisplayRequestDuration();
+                    setup.SwaggerEndpoint(
+                        $"/swagger/v1/swagger.json",
+                        $"PaymentsPoint v1"
+                        );
 
                     //var majorVersions = provider.ApiVersionDescriptions
                     //.Select(

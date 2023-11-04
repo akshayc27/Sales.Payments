@@ -7,7 +7,7 @@ namespace Sales.Payments.Controllers
     [ApiController]
     [ApiExplorerSettings(GroupName ="v1")]
     [ApiVersion("1.0")]
-    [Authorize(Policy = Policies.AdminOrCustomerAccess)]
+    //[Authorize(Policy = Policies.AdminOrCustomerAccess)]
     [Route("api/v{version:apiVersion}")]
     public class WeatherForecastController : ControllerBase
     {
@@ -22,8 +22,8 @@ namespace Sales.Payments.Controllers
         {
             _logger = logger;
         }
-        
-        [HttpGet("all",Name = "GetWeatherForecast")]
+        //[Authorize]
+        [HttpGet("WeatherForecasts",Name = "GetWeatherForecast")]
         public IEnumerable<WeatherForecast> Get()
         {
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast
